@@ -36,9 +36,6 @@ def home():
     <p>Endpoints disponibles: /autenticarUsuario, /productos, /pagos/crearIntento, /conversionDivisas, etc.</p>
     '''
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 8000)))
-
 @app.route('/autenticarUsuario', methods=['POST'])
 def autenticar_usuario():
     data = request.json
@@ -74,3 +71,6 @@ def solo_admin():
         return jsonify({"error": "Acceso denegado: no eres admin"}), 403
 
     return jsonify({"mensaje": "Acceso permitido solo a administradores."})
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 8000)))
