@@ -193,7 +193,7 @@ def conversion_divisas():
         currencies = data.get("response", {}).get("currencies", [])
 
         for conversion in currencies:
-            if "CLP to USD" in conversion.get("name", ""):
+            if conversion.get("base_currency") == "CLP" and conversion.get("quote_currency") == "USD":
                 return jsonify({
                     "moneda_origen": conversion.get("base_currency"),
                     "moneda_destino": conversion.get("quote_currency"),
