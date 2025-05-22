@@ -114,7 +114,7 @@ def obtener_sucursales():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/sucursal/<int:sucursal_id>', methods=['GET'])
+@app.route('/sucursal/<sucursal_id>', methods=['GET'])
 def obtener_sucursal(sucursal_id):
     url = f"{BASE_URL}/data/sucursales/{sucursal_id}"
     try:
@@ -132,7 +132,7 @@ def obtener_vendedores():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/vendedor/<int:vendedor_id>', methods=['GET'])
+@app.route('/vendedor/<vendedor_id>', methods=['GET'])
 def obtener_vendedor(vendedor_id):
     url = f"{BASE_URL}/data/vendedores/{vendedor_id}"
     try:
@@ -141,7 +141,7 @@ def obtener_vendedor(vendedor_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/articulo/venta/<int:articulo_id>', methods=['PUT'])
+@app.route('/articulo/venta/<articulo_id>', methods=['PUT'])
 def marcar_articulo_vendido(articulo_id):
     url = f"{BASE_URL}/data/articulos/venta/{articulo_id}"
     try:
