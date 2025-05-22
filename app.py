@@ -178,6 +178,7 @@ def crear_pedido():
         return jsonify({"error": str(e)}), 500
 
 from datetime import datetime
+from flask import request
 
 @app.route('/conversionDivisas', methods=['GET'])
 def conversion_divisas():
@@ -202,13 +203,30 @@ def conversion_divisas():
         if not obs:
             return jsonify({"error": "No hay datos disponibles para hoy"}), 404
 
-        valor_usd = obs[0]["value"]
+        tasa = float(obs[0]["value"])
 
-        return jsonify({
+        monto = request.args.get("monto", type=float)
+        tipo = request.args.get("tipo")
+
+        resultado = {
             "moneda_origen": "CLP",
             "moneda_destino": "USD",
-            "tasa": float(valor_usd)
-        })
+            "tasa": tasa
+        }
+
+        if monto and tipo:
+            if tipo == "CLPtoUSD":
+                resultado["monto_original"] = monto
+                resultado["monto_convertido"] = round(monto / tasa, 2)
+            elif tipo == "USDtoCLP":
+                resultado["moneda_origen"] = "USD"
+                resultado["moneda_destino"] = "CLP"
+                resultado["monto_original"] = monto
+                resultado["monto_convertido"] = round(monto * tasa, 2)
+            else:
+                return jsonify({"error": "Tipo de conversión no válido. Usa CLPtoUSD o USDtoCLP"}), 400
+
+        return jsonify(resultado)
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
