@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+import requests
 import os
 
 app = Flask(__name__)
@@ -71,6 +72,127 @@ def solo_admin():
         return jsonify({"error": "Acceso denegado: no eres admin"}), 403
 
     return jsonify({"mensaje": "Acceso permitido solo a administradores."})
+
+@app.route('/productos', methods=['GET'])
+def obtener_productos():
+    url = 'https://ea2p2assets-production.up.railway.app/productos'
+    headers = {
+        'Authorization': 'Bearer SaGrP9ojGS39hU9ljqbXxQ=='
+    }
+
+    try:
+        response = requests.get(url, headers=headers)
+        return jsonify(response.json()), response.status_code
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/producto/<int:producto_id>', methods=['GET'])
+def obtener_producto(producto_id):
+    url = f'https://ea2p2assets-production.up.railway.app/productos/{producto_id}'
+    headers = {
+        'Authorization': 'Bearer SaGrP9ojGS39hU9ljqbXxQ=='
+    }
+
+    try:
+        response = requests.get(url, headers=headers)
+        return jsonify(response.json()), response.status_code
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/sucursales', methods=['GET'])
+def obtener_sucursales():
+    url = 'https://ea2p2assets-production.up.railway.app/sucursales'
+    headers = {
+        'Authorization': 'Bearer SaGrP9ojGS39hU9ljqbXxQ=='
+    }
+
+    try:
+        response = requests.get(url, headers=headers)
+        return jsonify(response.json()), response.status_code
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/sucursal/<int:sucursal_id>/vendedores', methods=['GET'])
+def obtener_vendedores_por_sucursal(sucursal_id):
+    url = f'https://ea2p2assets-production.up.railway.app/sucursales/{sucursal_id}/vendedores'
+    headers = {
+        'Authorization': 'Bearer SaGrP9ojGS39hU9ljqbXxQ=='
+    }
+
+    try:
+        response = requests.get(url, headers=headers)
+        return jsonify(response.json()), response.status_code
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/vendedor/<int:vendedor_id>', methods=['GET'])
+def obtener_vendedor(vendedor_id):
+    url = f'https://ea2p2assets-production.up.railway.app/vendedores/{vendedor_id}'
+    headers = {
+        'Authorization': 'Bearer SaGrP9ojGS39hU9ljqbXxQ=='
+    }
+
+    try:
+        response = requests.get(url, headers=headers)
+        return jsonify(response.json()), response.status_code
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/productos/novedades', methods=['GET'])
+def obtener_novedades():
+    url = 'https://ea2p2assets-production.up.railway.app/productos/novedades'
+    headers = {
+        'Authorization': 'Bearer SaGrP9ojGS39hU9ljqbXxQ=='
+    }
+
+    try:
+        response = requests.get(url, headers=headers)
+        return jsonify(response.json()), response.status_code
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/productos/promocion', methods=['GET'])
+def obtener_promociones():
+    url = 'https://ea2p2assets-production.up.railway.app/productos/promocion'
+    headers = {
+        'Authorization': 'Bearer SaGrP9ojGS39hU9ljqbXxQ=='
+    }
+
+    try:
+        response = requests.get(url, headers=headers)
+        return jsonify(response.json()), response.status_code
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/pedido', methods=['POST'])
+def colocar_pedido():
+    data = request.json
+    url = 'https://ea2p2assets-production.up.railway.app/pedidos'
+    headers = {
+        'Authorization': 'Bearer SaGrP9ojGS39hU9ljqbXxQ==',
+        'Content-Type': 'application/json'
+    }
+
+    try:
+        response = requests.post(url, headers=headers, json=data)
+        return jsonify(response.json()), response.status_code
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/contacto', methods=['POST'])
+def contacto_vendedor():
+    data = request.json
+    url = 'https://ea2p2assets-production.up.railway.app/contacto'
+    headers = {
+        'Authorization': 'Bearer SaGrP9ojGS39hU9ljqbXxQ==',
+        'Content-Type': 'application/json'
+    }
+
+    try:
+        response = requests.post(url, headers=headers, json=data)
+        return jsonify(response.json()), response.status_code
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 8000)))
