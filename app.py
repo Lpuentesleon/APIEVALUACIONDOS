@@ -143,7 +143,12 @@ def obtener_vendedor(vendedor_id):
 
 @app.route('/articulo/venta/<articulo_id>', methods=['PUT'])
 def marcar_articulo_vendido(articulo_id):
-    url = f"{BASE_URL}/data/articulos/venta/{articulo_id}"
+    cantidad = request.args.get("cantidad")
+
+    if not cantidad:
+        return jsonify({"error": "El parámetro 'cantidad' es obligatorio"}), 400
+
+    url = f"{BASE_URL}/data/articulos/venta/{articulo_id}?cantidad={cantidad}"
     try:
         response = requests.put(url, headers=HEADERS_FERREMAS)
         return manejar_respuesta(response, "venta")
@@ -153,6 +158,12 @@ def marcar_articulo_vendido(articulo_id):
 @app.route('/pedido', methods=['POST'])
 def crear_pedido():
     data = request.json
+    
+    campos_obligatorios = ["id_cliente", "id_producto", "id_sucursal", "cantidad"]
+    for campo in campos_obligatorios:
+        if campo not in data:
+            return jsonify({"error": f"Falta el campo obligatorio: {campo}"}), 400
+
     url = f"{BASE_URL}/data/pedidos/nuevo"
     headers = {
         "x-authentication": FERREMAS_TOKEN,
@@ -163,6 +174,7 @@ def crear_pedido():
         return manejar_respuesta(response, "pedido")
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 8000)))
