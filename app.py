@@ -32,9 +32,9 @@ def validar_token(request):
 @app.route('/')
 def home():
     return '''
-    <h1>✅ API EVALUACIÓN 2 - FERREMAS</h1>
-    <p>Desarrollada por Luis Puentes</p>
-    <p>Endpoints disponibles: /autenticarUsuario, /data/articulos, /pedido, /contacto, etc.</p>
+    <h1>API EVALUACIÓN 2 - FERREMAS</h1>
+    <p>Desarrollada por Luis Puentes y Alejandro Ruiz</p>
+    <p>Endpoints disponibles: /autenticarUsuario, /articulos, /pedido, etc.</p>
     '''
 
 @app.route('/autenticarUsuario', methods=['POST'])
@@ -76,7 +76,7 @@ def solo_admin():
 BASE_URL = "https://ea2p2assets-production.up.railway.app"
 FERREMAS_TOKEN = "SaGrP9ojGS39hU9ljqbXxQ=="
 HEADERS_FERREMAS = {
-    "Authorization": f"Bearer {FERREMAS_TOKEN}"
+    "x_authentication": FERREMAS_TOKEN
 }
 
 @app.route('/articulos', methods=['GET'])
@@ -126,7 +126,7 @@ def crear_pedido():
     data = request.json
     url = f"{BASE_URL}/data/pedidos/nuevo"
     headers = {
-        "Authorization": f"Bearer {FERREMAS_TOKEN}",
+        "x_authentication": FERREMAS_TOKEN,
         "Content-Type": "application/json"
     }
     response = requests.post(url, headers=headers, json=data)
