@@ -186,16 +186,13 @@ def conversion_divisas():
             return jsonify({"error": "No se pudo obtener la conversión"}), 502
 
         data = response.json()
-        usd_rate = data.get("rates", {}).get("USD")
+        usd_rate = data["rates"]["USD"]
 
-        if usd_rate:
-            return jsonify({
-                "moneda_origen": "CLP",
-                "moneda_destino": "USD",
-                "tasa": usd_rate
-            })
-
-        return jsonify({"error": "No se encontró USD en la respuesta"}), 404
+        return jsonify({
+            "moneda_origen": "CLP",
+            "moneda_destino": "USD",
+            "tasa": usd_rate
+        })
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
