@@ -76,7 +76,7 @@ def solo_admin():
 BASE_URL = "https://ea2p2assets-production.up.railway.app"
 FERREMAS_TOKEN = "SaGrP9ojGS39hU9ljqbXxQ=="
 HEADERS_FERREMAS = {
-    "x_authentication": FERREMAS_TOKEN
+    "x-authentication": FERREMAS_TOKEN
 }
 
 @app.route('/articulos', methods=['GET'])
@@ -126,7 +126,7 @@ def crear_pedido():
     data = request.json
     url = f"{BASE_URL}/data/pedidos/nuevo"
     headers = {
-        "x_authentication": FERREMAS_TOKEN,
+        "x-authentication": FERREMAS_TOKEN,
         "Content-Type": "application/json"
     }
     response = requests.post(url, headers=headers, json=data)
