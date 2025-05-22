@@ -19,6 +19,8 @@ usuarios = {
     }
 }
 
+tokens_activos = {}
+
 def validar_token(request):
     token = request.headers.get("Authorization")
     if not token:
@@ -27,14 +29,12 @@ def validar_token(request):
     token = token.replace("Bearer ", "")
     return tokens_activos.get(token)
 
-tokens_activos = {}
-
 @app.route('/')
 def home():
     return '''
-    <h1>API EVALUACIÓN 2 - FERREMAS</h1>
-    <p>Desarrollada por Luis Puentes y Alejandro Ruiz</p>
-    <p>Endpoints disponibles: /autenticarUsuario, /productos, /pagos/crearIntento, /conversionDivisas, etc.</p>
+    <h1>✅ API EVALUACIÓN 2 - FERREMAS</h1>
+    <p>Desarrollada por Luis Puentes</p>
+    <p>Endpoints disponibles: /autenticarUsuario, /data/articulos, /pedido, /contacto, etc.</p>
     '''
 
 @app.route('/autenticarUsuario', methods=['POST'])
@@ -73,126 +73,64 @@ def solo_admin():
 
     return jsonify({"mensaje": "Acceso permitido solo a administradores."})
 
-@app.route('/productos', methods=['GET'])
-def obtener_productos():
-    url = 'https://ea2p2assets-production.up.railway.app/productos'
-    headers = {
-        'Authorization': 'Bearer SaGrP9ojGS39hU9ljqbXxQ=='
-    }
+BASE_URL = "https://ea2p2assets-production.up.railway.app"
+FERREMAS_TOKEN = "SaGrP9ojGS39hU9ljqbXxQ=="
+HEADERS_FERREMAS = {
+    "Authorization": f"Bearer {FERREMAS_TOKEN}"
+}
 
-    try:
-        response = requests.get(url, headers=headers)
-        return jsonify(response.json()), response.status_code
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+@app.route('/articulos', methods=['GET'])
+def obtener_articulos():
+    url = f"{BASE_URL}/data/articulos"
+    response = requests.get(url, headers=HEADERS_FERREMAS)
+    return jsonify(response.json()), response.status_code
 
-@app.route('/producto/<int:producto_id>', methods=['GET'])
-def obtener_producto(producto_id):
-    url = f'https://ea2p2assets-production.up.railway.app/productos/{producto_id}'
-    headers = {
-        'Authorization': 'Bearer SaGrP9ojGS39hU9ljqbXxQ=='
-    }
-
-    try:
-        response = requests.get(url, headers=headers)
-        return jsonify(response.json()), response.status_code
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+@app.route('/articulo/<int:articulo_id>', methods=['GET'])
+def obtener_articulo(articulo_id):
+    url = f"{BASE_URL}/data/articulos/{articulo_id}"
+    response = requests.get(url, headers=HEADERS_FERREMAS)
+    return jsonify(response.json()), response.status_code
 
 @app.route('/sucursales', methods=['GET'])
 def obtener_sucursales():
-    url = 'https://ea2p2assets-production.up.railway.app/sucursales'
-    headers = {
-        'Authorization': 'Bearer SaGrP9ojGS39hU9ljqbXxQ=='
-    }
+    url = f"{BASE_URL}/data/sucursales"
+    response = requests.get(url, headers=HEADERS_FERREMAS)
+    return jsonify(response.json()), response.status_code
 
-    try:
-        response = requests.get(url, headers=headers)
-        return jsonify(response.json()), response.status_code
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+@app.route('/sucursal/<int:sucursal_id>', methods=['GET'])
+def obtener_sucursal(sucursal_id):
+    url = f"{BASE_URL}/data/sucursales/{sucursal_id}"
+    response = requests.get(url, headers=HEADERS_FERREMAS)
+    return jsonify(response.json()), response.status_code
 
-@app.route('/sucursal/<int:sucursal_id>/vendedores', methods=['GET'])
-def obtener_vendedores_por_sucursal(sucursal_id):
-    url = f'https://ea2p2assets-production.up.railway.app/sucursales/{sucursal_id}/vendedores'
-    headers = {
-        'Authorization': 'Bearer SaGrP9ojGS39hU9ljqbXxQ=='
-    }
-
-    try:
-        response = requests.get(url, headers=headers)
-        return jsonify(response.json()), response.status_code
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+@app.route('/vendedores', methods=['GET'])
+def obtener_vendedores():
+    url = f"{BASE_URL}/data/vendedores"
+    response = requests.get(url, headers=HEADERS_FERREMAS)
+    return jsonify(response.json()), response.status_code
 
 @app.route('/vendedor/<int:vendedor_id>', methods=['GET'])
 def obtener_vendedor(vendedor_id):
-    url = f'https://ea2p2assets-production.up.railway.app/vendedores/{vendedor_id}'
-    headers = {
-        'Authorization': 'Bearer SaGrP9ojGS39hU9ljqbXxQ=='
-    }
+    url = f"{BASE_URL}/data/vendedores/{vendedor_id}"
+    response = requests.get(url, headers=HEADERS_FERREMAS)
+    return jsonify(response.json()), response.status_code
 
-    try:
-        response = requests.get(url, headers=headers)
-        return jsonify(response.json()), response.status_code
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/productos/novedades', methods=['GET'])
-def obtener_novedades():
-    url = 'https://ea2p2assets-production.up.railway.app/productos/novedades'
-    headers = {
-        'Authorization': 'Bearer SaGrP9ojGS39hU9ljqbXxQ=='
-    }
-
-    try:
-        response = requests.get(url, headers=headers)
-        return jsonify(response.json()), response.status_code
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/productos/promocion', methods=['GET'])
-def obtener_promociones():
-    url = 'https://ea2p2assets-production.up.railway.app/productos/promocion'
-    headers = {
-        'Authorization': 'Bearer SaGrP9ojGS39hU9ljqbXxQ=='
-    }
-
-    try:
-        response = requests.get(url, headers=headers)
-        return jsonify(response.json()), response.status_code
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+@app.route('/articulo/venta/<int:articulo_id>', methods=['PUT'])
+def marcar_articulo_vendido(articulo_id):
+    url = f"{BASE_URL}/data/articulos/venta/{articulo_id}"
+    response = requests.put(url, headers=HEADERS_FERREMAS)
+    return jsonify(response.json()), response.status_code
 
 @app.route('/pedido', methods=['POST'])
-def colocar_pedido():
+def crear_pedido():
     data = request.json
-    url = 'https://ea2p2assets-production.up.railway.app/pedidos'
+    url = f"{BASE_URL}/data/pedidos/nuevo"
     headers = {
-        'Authorization': 'Bearer SaGrP9ojGS39hU9ljqbXxQ==',
-        'Content-Type': 'application/json'
+        "Authorization": f"Bearer {FERREMAS_TOKEN}",
+        "Content-Type": "application/json"
     }
-
-    try:
-        response = requests.post(url, headers=headers, json=data)
-        return jsonify(response.json()), response.status_code
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/contacto', methods=['POST'])
-def contacto_vendedor():
-    data = request.json
-    url = 'https://ea2p2assets-production.up.railway.app/contacto'
-    headers = {
-        'Authorization': 'Bearer SaGrP9ojGS39hU9ljqbXxQ==',
-        'Content-Type': 'application/json'
-    }
-
-    try:
-        response = requests.post(url, headers=headers, json=data)
-        return jsonify(response.json()), response.status_code
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    response = requests.post(url, headers=headers, json=data)
+    return jsonify(response.json()), response.status_code
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 8000)))
