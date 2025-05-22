@@ -159,7 +159,7 @@ def marcar_articulo_vendido(articulo_id):
 def crear_pedido():
     data = request.json
 
-    campos_obligatorios = ["idCliente", "idProducto", "idSucursal", "cantidad"]
+    campos_obligatorios = ["sucursal", "articulo", "cantidad"]
     for campo in campos_obligatorios:
         if campo not in data:
             return jsonify({"error": f"Falta el campo obligatorio: {campo}"}), 400
