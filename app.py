@@ -96,7 +96,7 @@ def obtener_articulos():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/articulo/<int:articulo_id>', methods=['GET'])
+@app.route('/articulo/<articulo_id>', methods=['GET'])
 def obtener_articulo(articulo_id):
     url = f"{BASE_URL}/data/articulos/{articulo_id}"
     try:
