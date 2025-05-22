@@ -1,8 +1,14 @@
 from flask import Flask, request, jsonify
 import requests
 import os
-BCCH_USER = "l.puentesleon@gmail.com"
-BCCH_PASS = "Camicata1"
+from dotenv import load_dotenv
+import stripe
+
+load_dotenv()
+stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
+
+BCCH_USER = os.getenv("BCCH_USER")
+BCCH_PASS = os.getenv("BCCH_PASS")
 
 app = Flask(__name__)
 
@@ -227,6 +233,29 @@ def conversion_divisas():
                 return jsonify({"error": "Tipo de conversión no válido. Usa CLPtoUSD o USDtoCLP"}), 400
 
         return jsonify(resultado)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/pagos/crearIntento', methods=['POST'])
+def crear_intento_pago():
+    data = request.json
+    monto = data.get("monto")
+
+    if not monto:
+        return jsonify({"error": "Debe enviar el monto"}), 400
+
+    try:
+        intento = stripe.PaymentIntent.create(
+            amount=int(monto),
+            currency="clp",
+            payment_method_types=["card"]
+        )
+
+        return jsonify({
+            "id": intento["id"],
+            "client_secret": intento["client_secret"]
+        })
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
