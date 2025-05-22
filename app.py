@@ -158,8 +158,8 @@ def marcar_articulo_vendido(articulo_id):
 @app.route('/pedido', methods=['POST'])
 def crear_pedido():
     data = request.json
-    
-    campos_obligatorios = ["id_cliente", "id_producto", "id_sucursal", "cantidad"]
+
+    campos_obligatorios = ["idCliente", "idProducto", "idSucursal", "cantidad"]
     for campo in campos_obligatorios:
         if campo not in data:
             return jsonify({"error": f"Falta el campo obligatorio: {campo}"}), 400
