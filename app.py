@@ -189,14 +189,14 @@ def conversion_divisas():
         data = response.json()
 
         for conversion in data.get("response", {}).get("currencies", []):
-            if conversion["code"] == "USD":
+            if conversion["code"] == "CLP to USD":
                 return jsonify({
                     "moneda_origen": "CLP",
                     "moneda_destino": "USD",
                     "tasa": conversion["rate"]
                 })
 
-        return jsonify({"error": "USD no encontrado en resultados"}), 404
+        return jsonify({"error": "Conversión de CLP to USD no encontrado"}), 404
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
