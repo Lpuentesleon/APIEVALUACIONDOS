@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 import requests
 import os
+BCCH_USER = "l.puentesleon@gmail.com"
+BCCH_PASS = "Camicata1"
 
 app = Flask(__name__)
 
@@ -175,23 +177,37 @@ def crear_pedido():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+from datetime import datetime
+
 @app.route('/conversionDivisas', methods=['GET'])
 def conversion_divisas():
-    url = "https://api.exchangerate.host/latest?base=CLP&symbols=USD"
+    fecha_hoy = datetime.now().strftime("%Y-%m-%d")
+
+    url = (
+        f"https://si3.bcentral.cl/SieteRestWS/SieteRestWS.ashx?"
+        f"user={BCCH_USER}&pass={BCCH_PASS}"
+        f"&function=GetSeries&timeseries=F073.TCO.PRE.Z.D"
+        f"&firstdate={fecha_hoy}&lastdate={fecha_hoy}"
+    )
 
     try:
         response = requests.get(url)
 
         if response.status_code != 200:
-            return jsonify({"error": "No se pudo obtener la conversión"}), 502
+            return jsonify({"error": "No se pudo obtener datos del BCCh"}), 502
 
         data = response.json()
-        usd_rate = data["rates"]["USD"]
+        obs = data.get("Series", {}).get("Obs", [])
+
+        if not obs:
+            return jsonify({"error": "No hay datos disponibles para hoy"}), 404
+
+        valor_usd = obs[0]["value"]
 
         return jsonify({
             "moneda_origen": "CLP",
             "moneda_destino": "USD",
-            "tasa": usd_rate
+            "tasa": float(valor_usd)
         })
 
     except Exception as e:
