@@ -175,7 +175,6 @@ def crear_pedido():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 @app.route('/conversionDivisas', methods=['GET'])
 def conversion_divisas():
     url = "https://api.appnexus.com/currency?code=CLP&show_rate=true"
@@ -186,11 +185,15 @@ def conversion_divisas():
         if response.status_code != 200:
             return jsonify({"error": "No se pudo obtener la conversión"}), 502
 
-        data = response.json()
+        try:
+            data = response.json()
+        except Exception as json_error:
+            return jsonify({"error": "Error al parsear JSON", "detalle": str(json_error)}), 500
+
         currencies = data.get("response", {}).get("currencies", [])
 
         for conversion in currencies:
-            if conversion.get("quote_currency") == "USD":
+            if "CLP to USD" in conversion.get("name", ""):
                 return jsonify({
                     "moneda_origen": conversion.get("base_currency"),
                     "moneda_destino": conversion.get("quote_currency"),
