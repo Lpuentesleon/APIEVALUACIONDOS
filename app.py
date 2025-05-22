@@ -6,8 +6,8 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return '''
-    <h1>✅ API EVALUACIÓN 2 - FERREMAS</h1>
-    <p>Desarrollada por Luis Puentes León</p>
+    <h1>API EVALUACIÓN 2 - FERREMAS</h1>
+    <p>Desarrollada por Luis Puentes y Alejandro Ruiz</p>
     <p>Endpoints disponibles: /autenticarUsuario, /productos, /pagos/crearIntento, /conversionDivisas, etc.</p>
     '''
 
