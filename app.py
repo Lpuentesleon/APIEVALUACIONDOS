@@ -76,12 +76,23 @@ HEADERS_FERREMAS = {
     "x-authentication": FERREMAS_TOKEN
 }
 
+def manejar_respuesta(response, nombre_recurso="recurso"):
+    if response.status_code == 404:
+        return jsonify({"error": f"{nombre_recurso.capitalize()} no encontrado"}), 404
+    try:
+        if "application/json" in response.headers.get("Content-Type", ""):
+            return jsonify(response.json()), response.status_code
+        else:
+            return jsonify({"error": "Respuesta inesperada del servidor externo"}), 502
+    except Exception as e:
+        return jsonify({"error": f"Error al procesar respuesta: {str(e)}"}), 500
+
 @app.route('/articulos', methods=['GET'])
 def obtener_articulos():
     url = f"{BASE_URL}/data/articulos"
     try:
         response = requests.get(url, headers=HEADERS_FERREMAS)
-        return jsonify(response.json()), response.status_code
+        return manejar_respuesta(response, "artículos")
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -90,9 +101,7 @@ def obtener_articulo(articulo_id):
     url = f"{BASE_URL}/data/articulos/{articulo_id}"
     try:
         response = requests.get(url, headers=HEADERS_FERREMAS)
-        if response.status_code == 404:
-            return jsonify({"error": "Artículo no encontrado"}), 404
-        return jsonify(response.json()), response.status_code
+        return manejar_respuesta(response, "artículo")
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -101,7 +110,7 @@ def obtener_sucursales():
     url = f"{BASE_URL}/data/sucursales"
     try:
         response = requests.get(url, headers=HEADERS_FERREMAS)
-        return jsonify(response.json()), response.status_code
+        return manejar_respuesta(response, "sucursales")
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -110,9 +119,7 @@ def obtener_sucursal(sucursal_id):
     url = f"{BASE_URL}/data/sucursales/{sucursal_id}"
     try:
         response = requests.get(url, headers=HEADERS_FERREMAS)
-        if response.status_code == 404:
-            return jsonify({"error": "Sucursal no encontrada"}), 404
-        return jsonify(response.json()), response.status_code
+        return manejar_respuesta(response, "sucursal")
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -121,7 +128,7 @@ def obtener_vendedores():
     url = f"{BASE_URL}/data/vendedores"
     try:
         response = requests.get(url, headers=HEADERS_FERREMAS)
-        return jsonify(response.json()), response.status_code
+        return manejar_respuesta(response, "vendedores")
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -130,9 +137,7 @@ def obtener_vendedor(vendedor_id):
     url = f"{BASE_URL}/data/vendedores/{vendedor_id}"
     try:
         response = requests.get(url, headers=HEADERS_FERREMAS)
-        if response.status_code == 404:
-            return jsonify({"error": "Vendedor no encontrado"}), 404
-        return jsonify(response.json()), response.status_code
+        return manejar_respuesta(response, "vendedor")
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -141,7 +146,7 @@ def marcar_articulo_vendido(articulo_id):
     url = f"{BASE_URL}/data/articulos/venta/{articulo_id}"
     try:
         response = requests.put(url, headers=HEADERS_FERREMAS)
-        return jsonify(response.json()), response.status_code
+        return manejar_respuesta(response, "venta")
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -155,7 +160,7 @@ def crear_pedido():
     }
     try:
         response = requests.post(url, headers=headers, json=data)
-        return jsonify(response.json()), response.status_code
+        return manejar_respuesta(response, "pedido")
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
