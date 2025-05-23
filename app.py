@@ -51,7 +51,16 @@ def home():
 def autenticar_usuario():
     """
     Autenticar usuario
-    Permite ingresar con nombre de usuario y contraseña.
+    ---
+    summary: inicio de sesión
+    description: permite ingresar con nombre de usuario y contraseña.
+    responses:
+      200:
+        description: usuario autenticado correctamente
+      400:
+        description: Faltan datos en la solicitud
+      401:
+        description: credenciales incorrectas
     """
     data = request.json
     username = data.get("username")
@@ -79,8 +88,17 @@ def autenticar_usuario():
 @app.route('/soloAdmin', methods=['GET'])
 def solo_admin():
     """
-    Ruta solo para administradores
-    Verifica si el token corersponde a un usuario con rol de admin.
+    Acceso exclusivo para administradores
+    ---
+    summary: Verificacion de rol administrador
+    description: Devuelve el mensaje si el usuario autenticado tiene rol admin.
+    responses:
+      200:
+        description: acceso permitido
+      400:
+        description: token invalido o ausente
+      401:
+        description: usuario no tiene permisos de administrador
     """
     user_info = validar_token(request)
     if not user_info:
@@ -109,7 +127,15 @@ def manejar_respuesta(response, nombre_recurso="recurso"):
 @app.route('/articulos', methods=['GET'])
 def obtener_articulos():
     """
-    Obtener todos los articulos
+    Obtener articulos
+    ---
+    summary: listar articulos
+    description: devuelve todos los articulos disponibles desde FERREMAS.
+    responses:
+      200:
+        description: lista de articulos
+      500:
+        description: error al conectar
     """
     url = f"{BASE_URL}/data/articulos"
     try:
@@ -121,7 +147,15 @@ def obtener_articulos():
 @app.route('/articulo/<articulo_id>', methods=['GET'])
 def obtener_articulo(articulo_id):
     """
-    Obtener articulo por su ID
+    Obtener articulo por ID
+    ---
+    summary: detalle de articulo
+    description: devuelve los datos de un articulo especifico segun su ID.
+    responses:
+      200:
+        description: articulo encontrado
+      404:
+        description: no encontrado
     """
     url = f"{BASE_URL}/data/articulos/{articulo_id}"
     try:
@@ -133,7 +167,13 @@ def obtener_articulo(articulo_id):
 @app.route('/sucursales', methods=['GET'])
 def obtener_sucursales():
     """
-    Obtener todas las sucursales
+    Obtener sucursales
+    ---
+    summary: listar sucursales
+    description: retorna todas las sucursales registradas.
+    responses:
+      200:
+        description: lista de sucursales
     """
     url = f"{BASE_URL}/data/sucursales"
     try:
@@ -145,7 +185,13 @@ def obtener_sucursales():
 @app.route('/sucursal/<sucursal_id>', methods=['GET'])
 def obtener_sucursal(sucursal_id):
     """
-    Obtener sucursal por su ID
+    Obtener sucursal por ID
+    ---
+    summary: detalle de sucursal
+    description: muestra la informacion de una sucursal especifica.
+    responses:
+      200:
+        description: Datos de la sucursal
     """
     url = f"{BASE_URL}/data/sucursales/{sucursal_id}"
     try:
@@ -157,7 +203,13 @@ def obtener_sucursal(sucursal_id):
 @app.route('/vendedores', methods=['GET'])
 def obtener_vendedores():
     """
-    Obtener todos los vendedores
+    Obtener vendedores
+    ---
+    summary: listar vendedores
+    description: devuelve todos los vendedores registrados.
+    responses:
+      200:
+        description: lista de vendedores
     """
     url = f"{BASE_URL}/data/vendedores"
     try:
@@ -169,7 +221,13 @@ def obtener_vendedores():
 @app.route('/vendedor/<vendedor_id>', methods=['GET'])
 def obtener_vendedor(vendedor_id):
     """
-    Obtener vendedor por su ID
+    Obtener vendedor por ID
+    ---
+    summary: detalle de vendedor
+    description: muestra informacion de un vendedor por su ID.
+    responses:
+      200:
+        description: datos del vendedor
     """
     url = f"{BASE_URL}/data/vendedores/{vendedor_id}"
     try:
@@ -181,7 +239,15 @@ def obtener_vendedor(vendedor_id):
 @app.route('/articulo/venta/<articulo_id>', methods=['PUT'])
 def marcar_articulo_vendido(articulo_id):
     """
-    Marcar un articulo como vendido
+    Marcar articulo como vendido
+    ---
+    summary: registrar venta
+    description: Marca un articulo como vendido segun la cantidad.
+    responses:
+      200:
+        description: venta registrada
+      400:
+        description: falta el parametro cantidad
     """
     cantidad = request.args.get("cantidad")
 
@@ -198,7 +264,15 @@ def marcar_articulo_vendido(articulo_id):
 @app.route('/pedido', methods=['POST'])
 def crear_pedido():
     """
-    Crear un nuevo pedido
+    Crear pedido
+    ---
+    summary: nuevo pedido
+    description: crea un pedido indicando sucursal, articulo y cantidad.
+    responses:
+      200:
+        description: pedido creado
+      400:
+        description: faltan campos requeridos
     """
     data = request.json
 
@@ -224,7 +298,15 @@ from flask import request
 @app.route('/conversionDivisas', methods=['GET'])
 def conversion_divisas():
     """
-    Convertir CLP a USD o viceversa
+    Conversion CLP/USD
+    ---
+    summary: convertir divisas
+    description: devuelve el valor CLP/USD actual y permite convertir montos.
+    responses:
+      200:
+        description: conversion realizada
+      400:
+        description: tipo de conversoón no valido
     """
     fecha_hoy = datetime.now().strftime("%Y-%m-%d")
 
@@ -278,7 +360,15 @@ def conversion_divisas():
 @app.route('/pagos/crearIntento', methods=['POST'])
 def crear_intento_pago():
     """
-    Crear intento de pago con Stripe
+    Crear intento de pago
+    ---
+    summary: pago con stripe
+    description: crea un intento de pago y devuelve el ID y client_secret.
+    responses:
+      200:
+        description: intento de pago creado
+      400:
+        description: falta el monto
     """
     data = request.json
     monto = data.get("monto")
