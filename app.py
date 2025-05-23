@@ -3,6 +3,8 @@ import requests
 import os
 from dotenv import load_dotenv
 import stripe
+from datetime import datetime
+from flasgger import Swagger
 
 load_dotenv()
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
@@ -11,6 +13,7 @@ BCCH_USER = os.getenv("BCCH_USER")
 BCCH_PASS = os.getenv("BCCH_PASS")
 
 app = Flask(__name__)
+swagger = Swagger(app)
 
 usuarios = {
     "javier_thompson": {
