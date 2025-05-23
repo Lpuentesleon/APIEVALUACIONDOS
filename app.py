@@ -46,6 +46,10 @@ def home():
 
 @app.route('/autenticarUsuario', methods=['POST'])
 def autenticar_usuario():
+    """
+    Autenticar usuario
+    Permite ingresar con nombre de usuario y contraseña.
+    """
     data = request.json
     username = data.get("username")
     password = data.get("password")
@@ -71,6 +75,10 @@ def autenticar_usuario():
 
 @app.route('/soloAdmin', methods=['GET'])
 def solo_admin():
+    """
+    Ruta solo para administradores
+    Verifica si el token corersponde a un usuario con rol de admin.
+    """
     user_info = validar_token(request)
     if not user_info:
         return jsonify({"error": "Token inválido o ausente"}), 401
@@ -97,6 +105,9 @@ def manejar_respuesta(response, nombre_recurso="recurso"):
 
 @app.route('/articulos', methods=['GET'])
 def obtener_articulos():
+    """
+    Obtener todos los articulos
+    """
     url = f"{BASE_URL}/data/articulos"
     try:
         response = requests.get(url, headers=HEADERS_FERREMAS)
@@ -106,6 +117,9 @@ def obtener_articulos():
 
 @app.route('/articulo/<articulo_id>', methods=['GET'])
 def obtener_articulo(articulo_id):
+    """
+    Obtener articulo por su ID
+    """
     url = f"{BASE_URL}/data/articulos/{articulo_id}"
     try:
         response = requests.get(url, headers=HEADERS_FERREMAS)
@@ -115,6 +129,9 @@ def obtener_articulo(articulo_id):
 
 @app.route('/sucursales', methods=['GET'])
 def obtener_sucursales():
+    """
+    Obtener todas las sucursales
+    """
     url = f"{BASE_URL}/data/sucursales"
     try:
         response = requests.get(url, headers=HEADERS_FERREMAS)
@@ -124,6 +141,9 @@ def obtener_sucursales():
 
 @app.route('/sucursal/<sucursal_id>', methods=['GET'])
 def obtener_sucursal(sucursal_id):
+    """
+    Obtener sucursal por su ID
+    """
     url = f"{BASE_URL}/data/sucursales/{sucursal_id}"
     try:
         response = requests.get(url, headers=HEADERS_FERREMAS)
@@ -133,6 +153,9 @@ def obtener_sucursal(sucursal_id):
 
 @app.route('/vendedores', methods=['GET'])
 def obtener_vendedores():
+    """
+    Obtener todos los vendedores
+    """
     url = f"{BASE_URL}/data/vendedores"
     try:
         response = requests.get(url, headers=HEADERS_FERREMAS)
@@ -142,6 +165,9 @@ def obtener_vendedores():
 
 @app.route('/vendedor/<vendedor_id>', methods=['GET'])
 def obtener_vendedor(vendedor_id):
+    """
+    Obtener vendedor por su ID
+    """
     url = f"{BASE_URL}/data/vendedores/{vendedor_id}"
     try:
         response = requests.get(url, headers=HEADERS_FERREMAS)
@@ -151,6 +177,9 @@ def obtener_vendedor(vendedor_id):
 
 @app.route('/articulo/venta/<articulo_id>', methods=['PUT'])
 def marcar_articulo_vendido(articulo_id):
+    """
+    Marcar un articulo como vendido
+    """
     cantidad = request.args.get("cantidad")
 
     if not cantidad:
@@ -165,6 +194,9 @@ def marcar_articulo_vendido(articulo_id):
 
 @app.route('/pedido', methods=['POST'])
 def crear_pedido():
+    """
+    Crear un nuevo pedido
+    """
     data = request.json
 
     campos_obligatorios = ["sucursal", "articulo", "cantidad"]
@@ -188,6 +220,9 @@ from flask import request
 
 @app.route('/conversionDivisas', methods=['GET'])
 def conversion_divisas():
+    """
+    Convertir CLP a USD o viceversa
+    """
     fecha_hoy = datetime.now().strftime("%Y-%m-%d")
 
     url = (
@@ -239,6 +274,9 @@ def conversion_divisas():
 
 @app.route('/pagos/crearIntento', methods=['POST'])
 def crear_intento_pago():
+    """
+    Crear intento de pago con Stripe
+    """
     data = request.json
     monto = data.get("monto")
 
